@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <UserNotifications/UserNotifications.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface ViewController ()
 
@@ -28,16 +29,20 @@
   content.subtitle = @"First notification subtitle";
   content.body = @"First notification body";
   content.badge = @([[UIApplication sharedApplication] applicationIconBadgeNumber] + 1);
+  content.sound = [UNNotificationSound soundNamed:@"beep.wav"];
   
   NSURL *path = [[NSBundle mainBundle] URLForResource:@"IMG_0557.JPG" withExtension:nil];
   NSError *error = nil;
-  UNNotificationAttachment *attachment = [UNNotificationAttachment attachmentWithIdentifier:@"com.secoo.notification.attachment" URL:path options:nil error:&error];
-  if (!error) {
-    content.attachments = @[attachment];
-  } else {
+  NSDictionary *options = @{
+                            UNNotificationAttachmentOptionsTypeHintKey : (__bridge NSString *)kUTTypeJPEG,
+                            UNNotificationAttachmentOptionsThumbnailClippingRectKey : (__bridge id)CGRectCreateDictionaryRepresentation(CGRectMake(0, 0, 0.5, 0.5))
+                            };
+  UNNotificationAttachment *attachment = [UNNotificationAttachment attachmentWithIdentifier:@"com.secoo.notification.attachment" URL:path options:options error:&error];
+  if (error) {
     NSLog(@"error: %@", error);
+    return;
   }
-  
+  content.attachments = @[attachment];
   UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:ti repeats:NO];
   NSString *requestIdentifier = @"com.secoo.notification.first.send";
   UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifier content:content trigger:trigger];
@@ -64,6 +69,34 @@
     [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[requestIdentifier]];
     [UIApplication sharedApplication].applicationIconBadgeNumber -= 1;
   });
+}
+
+- (IBAction)_pushSound:(UIButton *)sender {
+  NSTimeInterval ti = (NSTimeInterval)[self.timeIntervalField.text doubleValue];
+  UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+  content.title = @"push sound";
+  content.subtitle = @"push sound subtitle";
+  content.body = @"push sound body";
+  content.badge = @([[UIApplication sharedApplication] applicationIconBadgeNumber] + 1);
+
+  NSURL *path = [[NSBundle mainBundle] URLForResource:@"music_001.mp3" withExtension:nil];
+  NSError *error = nil;
+  NSDictionary *options = @{
+                            UNNotificationAttachmentOptionsTypeHintKey : (__bridge id)kUTTypeMP3,
+                            };
+  UNNotificationAttachment *attachment = [UNNotificationAttachment attachmentWithIdentifier:@"com.secoo.notification.attachment.audio" URL:path options:options error:&error];
+  if (error) {
+    NSLog(@"error: %@", error);
+    return;
+  }
+
+  content.attachments = @[attachment];
+  UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:ti repeats:NO];
+  NSString *requestIdentifier = @"com.secoo.notification.sound";
+  UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifier content:content trigger:trigger];
+  [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+    NSLog(@"id: %@, error: %@", requestIdentifier, error.description);
+  }];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

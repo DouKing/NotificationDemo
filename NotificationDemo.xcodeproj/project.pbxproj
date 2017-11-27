@@ -18,6 +18,7 @@
 		00D2A3D31E6D6E6900E0533D /* IMG_0557.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 00D2A3D21E6D6E6900E0533D /* IMG_0557.JPG */; };
 		00D2A3DC1E6D761C00E0533D /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D2A3DB1E6D761C00E0533D /* NotificationService.m */; };
 		00D2A3E01E6D761C00E0533D /* NotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 00D2A3D81E6D761C00E0533D /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00FA6E7A1FCBF56B0050E72C /* music_001.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 00FA6E791FCBF56B0050E72C /* music_001.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		00D2A3DA1E6D761C00E0533D /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
 		00D2A3DB1E6D761C00E0533D /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		00D2A3DD1E6D761C00E0533D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00FA6E791FCBF56B0050E72C /* music_001.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music_001.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				009917601E6D156000220C9F /* LaunchScreen.storyboard */,
 				009917631E6D156000220C9F /* Info.plist */,
 				00D2A3D21E6D6E6900E0533D /* IMG_0557.JPG */,
+				00FA6E791FCBF56B0050E72C /* music_001.mp3 */,
 				009917521E6D156000220C9F /* Supporting Files */,
 			);
 			path = NotificationDemo;
@@ -238,6 +241,7 @@
 				009917621E6D156000220C9F /* LaunchScreen.storyboard in Resources */,
 				0099175F1E6D156000220C9F /* Assets.xcassets in Resources */,
 				0099175D1E6D156000220C9F /* Main.storyboard in Resources */,
+				00FA6E7A1FCBF56B0050E72C /* music_001.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +475,7 @@
 				00D2A3E31E6D761C00E0533D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -33,7 +33,7 @@
   
   //发送远程通知需要请求token
   [application registerForRemoteNotifications];
-  
+
   //Actions
   [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:self.category]];
   
@@ -43,6 +43,24 @@
       NSLog(@"authorizationStatus: %ld", (long)settings.authorizationStatus);
     }];
   }
+
+  NSDate *date = [[NSUserDefaults standardUserDefaults] objectForKey:@"silentData"];
+  NSLog(@"silent data: %@", date);
+  NSDictionary *userInfo = [[NSUserDefaults standardUserDefaults] objectForKey:@"silent-userInfo"];
+  NSLog(@"silent userInfo: %@", userInfo);
+  return YES;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  if (options) {
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"tt" message:[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:options options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding ] preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:action];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    });
+  }
+
   return YES;
 }
 
@@ -51,13 +69,21 @@
   NSLog(@"token: %@", hexStr);
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  //receive silent notification
+  [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:@"silentData"];
+  [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"silent-userInfo"];
+}
+
+#pragma mark - UNUserNotificationCenterDelegate
+
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
   completionHandler(UNNotificationPresentationOptionAlert |
                     UNNotificationPresentationOptionBadge |
                     UNNotificationPresentationOptionSound);
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
   NSString *categoryId = response.notification.request.content.categoryIdentifier;
   if ([categoryId isEqualToString:kReplyNotificationCategoryId]) {
     [self _reply:response];
